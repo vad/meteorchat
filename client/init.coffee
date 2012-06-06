@@ -1,4 +1,8 @@
-nick = 'User' + Math.floor(Math.random()*1000)
+enable_autoscroll = true
+nick = amplify.store('nick')
+if not nick
+  nick = 'User' + Math.floor(Math.random()*1000)
+  amplify.store('nick', nick)
 #  Session.set('nick', nick)
 Session.set 'user_id', Meteor.uuid()
 $input = null
@@ -11,7 +15,7 @@ insert_message = ->
     nick_groups = /\/nick ([a-zA-Z0-9]+)/.exec(val)
     if nick_groups
       nick = nick_groups[1]
-      console.log nick, nick_groups
+      amplify.store('nick', nick)
       Connections.update {user_id: Session.get("user_id")}, {$set: {nick: nick}}
       return
     alert "Unknown command"
@@ -32,6 +36,11 @@ Template.people.is_me = (user_id) ->
 Meteor.setInterval( ->
   Meteor.call('keepalive', Session.get('user_id'), nick)
 , 2000)
+
+Meteor.setInterval( ->
+  if enable_autoscroll
+    $('.room')[0].scrollByPages(100)
+, 100)
 
 Meteor.startup ->
   $input = $('#input')
@@ -61,3 +70,9 @@ Meteor.startup ->
 
   $('.people').append(people)
 
+  $('.room').scroll (event) ->
+    $room = $('.room')
+    room = $room[0]
+    enable_autoscroll = false
+    if $room.height() is (room.scrollHeight - room.scrollTop)
+      enable_autoscroll = true

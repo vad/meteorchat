@@ -9,9 +9,14 @@
   bottom: 0;
 }
 
-#content {
-    padding: 1%;
-}
+.room
+  height 100%
+  overflow auto
+  background white
+
+#content
+  padding: 1%
+  overflow-y auto
 
 div.bottom-buttons
   background: white
@@ -60,13 +65,19 @@ hr.separator
     font-weight: bold
 
 #people
-  padding: 15px 0 15px 15px
+  padding: 15px 0
 
   .person
     margin 2px 10px
 
-.people-wrapper
-  background: #eee
-
-html, body, #page, .main-row, .people-wrapper, .people
+html, body, #page, .people-wrapper, .people
   height: 100%
+
+.main-row
+  position absolute
+  bottom 49px
+  top 0
+  left 0
+  right 0
+  overflow hidden
+  background #eee

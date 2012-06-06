@@ -13,17 +13,60 @@
     padding: 1%;
 }
 
-div.bottom-buttons {
-    width: 98%;
-}
+div.bottom-buttons
+  background: white
+  padding-top: 10px
+  height: 37px
+  width: 100%
 
-.message {
-    border-bottom: 1px solid #dcdcdc;
-    padding: 5px 0;
-    float: left;
-}
+  .span1
+    margin-left: 1.5%
+    width: 7%
 
-.message .sender {
-    text-align: right;
-    font-weight: bold;
-}
+.bottom-buttons-inner
+  position: relative
+
+.input-wrapper
+ position: absolute
+ left: 10px
+ right: 130px
+
+#input
+  width: 100%
+
+.submit-wrapper
+  position: absolute
+  right: 10px
+  width: 100px
+
+#submit
+  min-width: 100px
+  width: 90%
+  margin-right: 10%
+
+hr.separator
+  position: absolute
+  bottom: 47px
+  width: 100%
+  margin: 0
+
+.message
+  border-bottom: 1px solid #dcdcdc
+  padding: 5px 0
+  float: left
+
+  .sender
+    text-align: right
+    font-weight: bold
+
+#people
+  padding: 15px 0 15px 15px
+
+  .person
+    margin 2px 10px
+
+.people-wrapper
+  background: #eee
+
+html, body, #page, .main-row, .people-wrapper, .people
+  height: 100%

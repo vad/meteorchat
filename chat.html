@@ -4,28 +4,42 @@
 
 <body>
     <div id="page">
-        <div class="row-fluid">
+        <div class="row-fluid main-row">
             <div class="span10 room"></div>
             <div class="span2 people"></div>
         </div>
-        <div class="row-fluid bottom bottom-buttons">
-            <div class="span10">
-                <input class="w100" type="text" id="input">
+        <hr class="separator">
+        <div class="bottom bottom-buttons">
+            <div class="bottom-buttons-inner">
+                <div class="input-wrapper pull-left">
+                    <input type="text" id="input" class="">
+                </div>
+                <div class="submit-wrapper pull-left">
+                    <input class="btn btn-primary" type="button" id="submit" value="Send">
+                </div>
             </div>
-            <input class="span2 btn btn-primary" type="button" id="submit" value="Send">
         </div>
     </div>
 </body>
 
 <template name="chatroom">
   <div id="content">
+      {{#each messages}}
+        <div class="message row-fluid">
+            <div class="span1 sender">{{fromName from}}</div>
+            <div class="span11">{{text}}</div>
+        </div>
+      {{/each}}
   </div>
 </template>
 
 <template name="people">
-  <div id="people">
-      {{#each people}}
-          <div class="sender">{{nick}}</div>
-      {{/each}}
+  <div class="people-wrapper">
+        <div id="people">
+          <h3>Online</h3>
+          {{#each people}}
+              <div class="person">{{#if is_me user_id }}<i class="icon-user"></i>{{/if}}{{nick}}</div>
+          {{/each}}
+        </div>
   </div>
 </template>

@@ -1,0 +1,28 @@
+/* CSS declarations go here */
+
+.w100 {
+  width: 100%;
+}
+
+.bottom {
+  position: absolute;
+  bottom: 0;
+}
+
+#content {
+    padding: 1%;
+}
+
+div.bottom-buttons {
+    width: 98%;
+}
+
+.message {
+    border-bottom: 1px solid #dcdcdc;
+    padding: 5px 0;
+}
+
+.message .sender {
+    text-align: right;
+    font-weight: bold;
+}

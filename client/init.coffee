@@ -17,6 +17,9 @@ $input = null
 
 insert_message = ->
   val = $input.val()
+
+  return if not val
+
   $input.val('')
 
   # commands
@@ -106,19 +109,21 @@ Meteor.startup ->
 
   $('.people').append(people)
 
-  $('.room').scroll (event) ->
-    $room = $('.room')
-    room = $room[0]
+  # autoscroll
+  $scrollable = $('#content')
+  scrollable = $scrollable[0]
+  $scrollable.scroll (event) ->
     enable_autoscroll = false
-    if $room.height() is (room.scrollHeight - room.scrollTop)
+    if $scrollable.height() is (scrollable.scrollHeight - scrollable.scrollTop)
       enable_autoscroll = true
 
-  $input.focus()
-
-  # autoscroll
+  # autoscroll: add a message, should i scroll?
   Messages.find().observe
     added: ->
       setTimeout(->
         if enable_autoscroll
-          $('.room')[0].scrollByPages(100)
+          scrollable.scrollByPages(100)
       , 10)
+
+  $input.focus()
+

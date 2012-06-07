@@ -1,5 +1,5 @@
 Meteor.startup ->
-  #   code to run on server at startup
+  # code to run on server at startup
   #    // server code: heartbeat method
   Meteor.methods
     keepalive:  (user_id, nick) ->
@@ -23,3 +23,11 @@ Meteor.startup ->
       Connections.update({user_id: conn.user_id}, {$set: {closed: true}})
     )
   , 4000)
+
+  Meteor.publish("messages", ->
+    Messages.find()
+  )
+
+  Meteor.publish("open_connections", ->
+    Connections.find({closed: {$not: {$exists: true}}})
+  )

@@ -21,14 +21,11 @@ insert_message = ->
     alert "Unknown command"
     return
   Messages.insert
-    'from': Session.get('user_id')
+    'from': nick
     'text': val
 
   $input.val('')
 
-
-Template.chatroom.fromName = (user_id) ->
-  Connections.findOne({user_id: user_id}).nick
 
 Template.people.is_me = (user_id) ->
   user_id is Session.get 'user_id'
@@ -61,6 +58,9 @@ Meteor.setInterval( ->
 , 1000)
 
 Meteor.startup ->
+  Meteor.subscribe("messages")
+  Meteor.subscribe("open_connections")
+
   $input = $('#input')
   $('#submit').click insert_message
 
@@ -79,10 +79,7 @@ Meteor.startup ->
 
   people = Meteor.ui.render ->
     Template.people
-      'people': Connections.find
-        closed:
-          $not:
-            $exists: true
+      'people': Connections.find()
 
   $('.people').append(people)
 

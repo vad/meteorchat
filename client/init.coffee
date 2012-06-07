@@ -60,11 +60,6 @@ Meteor.setInterval( ->
   Meteor.call('keepalive', Session.get('user_id'), nick)
 , 1000)
 
-Meteor.setInterval( ->
-  if enable_autoscroll
-    $('.room')[0].scrollByPages(100)
-, 100)
-
 Meteor.startup ->
   $input = $('#input')
   $('#submit').click insert_message
@@ -78,7 +73,7 @@ Meteor.startup ->
 
   room = Meteor.ui.render ->
     Template.chatroom
-      'messages': Messages.find()
+      'messages': Messages.find({})
 
   $('.room').append(room)
 
@@ -99,3 +94,11 @@ Meteor.startup ->
       enable_autoscroll = true
 
   $input.focus()
+
+  # autoscroll
+  Messages.find().observe
+    added: ->
+      setTimeout(->
+        if enable_autoscroll
+          $('.room')[0].scrollByPages(100)
+      , 10)

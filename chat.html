@@ -24,6 +24,13 @@
 
 <template name="chatroom">
   <div id="content">
+      <h1>Ahref
+          {{#if misc}}
+              {{#if misc.topic}}
+                <small>{{misc.topic}}</small>
+              {{/if}}
+          {{/if}}
+      </h1>
       {{#each messages}}
         <div class="message row-fluid">
             <div class="span2 sender">{{from}}</div>

@@ -19,10 +19,14 @@ insert_message = ->
   val = $input.val()
   $input.val('')
 
+  # commands
   if val[0] is '/'
-    nick_groups = /\/nick ([a-zA-Z0-9_-]+)/.exec(val)
-    if nick_groups
-      nick_ = nick_groups[1]
+    first_space = val.indexOf(" ")
+    command = val.slice(1, first_space)
+    args = val.slice(first_space + 1)
+    # change nick?
+    if command is 'nick'
+      nick_ = args
       old_nick = nick
       if People.findOne({nick: nick_})
         alert("Ghe n'e' za' uno, set ti?")
@@ -31,6 +35,10 @@ insert_message = ->
       Connections.update {user_id: Session.get("user_id")}, {$set: {nick: nick}}
       People.update {nick: old_nick}, {$set: {nick: nick}}
       return
+    if command is 'topic'
+      Misc.update({}, {$set: {topic: args}})
+      return
+
     alert "Unknown command"
     return
   Messages.insert
@@ -73,6 +81,7 @@ Meteor.setInterval( ->
 Meteor.startup ->
   Meteor.subscribe("messages")
   Meteor.subscribe("people")
+  Meteor.subscribe("misc")
 
   $input = $('#input')
   $('#submit').click insert_message
@@ -87,6 +96,7 @@ Meteor.startup ->
   room = Meteor.ui.render ->
     Template.chatroom
       'messages': Messages.find({})
+      'misc': Misc.findOne()
 
   $('.room').append(room)
 

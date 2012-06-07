@@ -27,10 +27,19 @@ Meteor.startup ->
     )
   , 10000)
 
+  # if no settings, create an empty one
+  console.log Misc.findOne({})
+  if not Misc.findOne({})
+    Misc.insert({topic: ''})
+
   Meteor.publish("messages", ->
     Messages.find()
   )
 
   Meteor.publish("people", ->
     People.find()
+  )
+
+  Meteor.publish("misc", ->
+    Misc.find()
   )

@@ -26,8 +26,10 @@
   <div id="content">
       {{#each messages}}
         <div class="message row-fluid">
-            <div class="span1 sender">{{fromName from}}</div>
-            <div class="span11">{{text}}</div>
+            <div class="span2 sender">{{fromName from}}</div>
+            <div class="span10">{{text}}</div>
+        </div>
+        <div class="row-fluid" id="{{embed text}}">
         </div>
       {{/each}}
   </div>
@@ -38,7 +40,7 @@
         <div id="people">
           <h3>Online</h3>
           {{#each people}}
-              <div class="person">{{#if is_me user_id }}<i class="icon-user"></i>{{/if}}{{nick}}</div>
+              <div class="person">{{#if is_me user_id }}<i class="icon-star"></i>{{else}}<i class="icon-user"></i>{{/if}}{{nick}}</div>
           {{/each}}
         </div>
   </div>

@@ -12,7 +12,7 @@ insert_message = ->
   $input.val('')
 
   if val[0] is '/'
-    nick_groups = /\/nick ([a-zA-Z0-9]+)/.exec(val)
+    nick_groups = /\/nick ([a-zA-Z0-9_-]+)/.exec(val)
     if nick_groups
       nick = nick_groups[1]
       amplify.store('nick', nick)
@@ -26,16 +26,39 @@ insert_message = ->
 
   $input.val('')
 
+
 Template.chatroom.fromName = (user_id) ->
   Connections.findOne({user_id: user_id}).nick
 
 Template.people.is_me = (user_id) ->
   user_id is Session.get 'user_id'
 
-#    // client code: ping heartbeat every 5 seconds
+Template.chatroom.embed = (text) ->
+  key = ""
+
+  if not /https?\:\/\//.test(text)
+    return ''
+
+  id_ = Meteor.uuid()
+  div_id = "embed-#{id_}"
+
+  url = text
+  $.getJSON("http://api.embed.ly/1/oembed?callback=?", {
+    key: key
+    url: url
+    maxwidth: 800
+    maxheight: 300
+    format: "jsonp"
+  }, (data) ->
+    console.log data
+    $("##{div_id}").html(data.html?)
+  )
+  return div_id
+
+# ping heartbeat every 5 seconds
 Meteor.setInterval( ->
   Meteor.call('keepalive', Session.get('user_id'), nick)
-, 2000)
+, 1000)
 
 Meteor.setInterval( ->
   if enable_autoscroll
@@ -51,9 +74,7 @@ Meteor.startup ->
       insert_message()
       event.stopPropagation()
 
-  Connections.insert
-    user_id: Session.get('user_id')
-    nick: nick
+  Meteor.call('keepalive', Session.get('user_id'), nick)
 
   room = Meteor.ui.render ->
     Template.chatroom
@@ -76,3 +97,5 @@ Meteor.startup ->
     enable_autoscroll = false
     if $room.height() is (room.scrollHeight - room.scrollTop)
       enable_autoscroll = true
+
+  $input.focus()

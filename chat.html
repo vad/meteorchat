@@ -24,7 +24,7 @@
 
 <template name="chatroom">
   <div class="header">
-      <h1>Ahref
+      <h1>$('a[href]')
           {{#if misc}}
           {{#if misc.topic}}
           <small>{{misc.topic}}</small>
@@ -34,12 +34,18 @@
   </div>
   <div id="content">
       {{#each messages}}
+        {{#if event}}
+        <div class="event row-fluid">
+          {{text}}
+        </div>
+        {{else}}
         <div class="message row-fluid">
             <div class="span2 sender">{{from}}</div>
             <div class="span10">{{text}}</div>
         </div>
         <div class="row-fluid" id="{{embed text}}">
         </div>
+        {{/if}}
       {{/each}}
   </div>
 </template>

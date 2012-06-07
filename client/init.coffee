@@ -15,6 +15,29 @@ if not user_id
 Session.set 'user_id', user_id
 $input = null
 
+
+tryToChangeNick = (nick_) ->
+  old_nick = nick
+  if People.findOne({nick: nick_})
+    alert("Ghe n'e' za' uno, set ti?")
+    return
+  changeNick(nick_)
+  Connections.update {user_id: Session.get("user_id")}, {$set: {nick: nick}}
+  People.update {nick: old_nick}, {$set: {nick: nick}}
+  Messages.insert
+    event: true
+    text: "#{old_nick} is now know as #{nick}"
+    from: ""
+
+
+changeTopic = (topic) ->
+  Misc.update({}, {$set: {topic: topic}})
+  Messages.insert
+    event: true
+    text: "#{nick} changed the topic to #{topic}"
+    from: ""
+
+
 insert_message = ->
   val = $input.val()
 
@@ -29,17 +52,10 @@ insert_message = ->
     args = val.slice(first_space + 1)
     # change nick?
     if command is 'nick'
-      nick_ = args
-      old_nick = nick
-      if People.findOne({nick: nick_})
-        alert("Ghe n'e' za' uno, set ti?")
-        return
-      changeNick(nick_)
-      Connections.update {user_id: Session.get("user_id")}, {$set: {nick: nick}}
-      People.update {nick: old_nick}, {$set: {nick: nick}}
+      tryToChangeNick(args)
       return
     if command is 'topic'
-      Misc.update({}, {$set: {topic: args}})
+      changeTopic(args)
       return
 
     alert "Unknown command"

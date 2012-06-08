@@ -39,11 +39,15 @@
           {{text}}
         </div>
         {{else}}
-        <div class="message row-fluid">
-            <div class="span2 sender">{{from}}</div>
-            <div class="span10">{{text}}</div>
-        </div>
-        <div class="row-fluid" id="{{embed text}}">
+        <div class="message">
+            <div class="row-fluid">
+                <div class="span2 sender">{{from}}</div>
+                <div class="span10">{{text}}</div>
+            </div>
+            <center>
+                <div class="row-fluid embed" id="{{embed text}}">
+                </div>
+            </center>
         </div>
         {{/if}}
       {{/each}}

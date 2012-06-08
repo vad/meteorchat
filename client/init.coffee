@@ -1,4 +1,5 @@
 enable_autoscroll = true
+scrollable = null
 nick = amplify.store('nick')
 
 changeNick = (n) ->
@@ -30,6 +31,11 @@ tryToChangeNick = (nick_) ->
 changeTopic = (topic) ->
   Misc.update({}, {$set: {topic: topic}})
   insert_event "#{nick} changed the topic to #{topic}"
+
+
+scrollBottom = ->
+  if enable_autoscroll
+    scrollable.scrollByPages(100)
 
 
 process_input = ->
@@ -78,7 +84,15 @@ Template.chatroom.embed = (text) ->
     format: "jsonp"
   }, (data) ->
     console.log data
-    $("##{div_id}").html(data.html?)
+    if data.html?
+      $("##{div_id}").html(data.html)
+    else if data.thumbnail_url?
+      $("##{div_id}").html($('<img/>').attr({src: data.thumbnail_url}))
+
+    embed_scroll_id = Meteor.setInterval(scrollBottom, 100)
+    Meteor.setTimeout(->
+      Meteor.clearTimeout(embed_scroll_id)
+    , 10000)
   )
   return div_id
 
@@ -104,7 +118,10 @@ Meteor.startup ->
 
   room = Meteor.ui.render ->
     Template.chatroom
-      'messages': Messages.find({})
+      'messages': Messages.find({},
+        sort:
+          time: 1
+      )
       'misc': Misc.findOne()
 
   $('.room').append(room)
@@ -126,10 +143,7 @@ Meteor.startup ->
   # autoscroll: add a message, should i scroll?
   Messages.find().observe
     added: ->
-      setTimeout(->
-        if enable_autoscroll
-          scrollable.scrollByPages(100)
-      , 10)
+      setTimeout(scrollBottom, 10)
 
   $input.focus()
 

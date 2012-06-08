@@ -24,21 +24,15 @@ tryToChangeNick = (nick_) ->
   changeNick(nick_)
   Connections.update {user_id: Session.get("user_id")}, {$set: {nick: nick}}
   People.update {nick: old_nick}, {$set: {nick: nick}}
-  Messages.insert
-    event: true
-    text: "#{old_nick} is now know as #{nick}"
-    from: ""
+  insert_event "#{old_nick} is now know as #{nick}"
 
 
 changeTopic = (topic) ->
   Misc.update({}, {$set: {topic: topic}})
-  Messages.insert
-    event: true
-    text: "#{nick} changed the topic to #{topic}"
-    from: ""
+  insert_event "#{nick} changed the topic to #{topic}"
 
 
-insert_message = ->
+process_input = ->
   val = $input.val()
 
   return if not val
@@ -60,11 +54,7 @@ insert_message = ->
 
     alert "Unknown command"
     return
-  Messages.insert
-    'from': nick
-    'text': val
-
-  $input.val('')
+  insert_message nick, val
 
 
 Template.people.is_me = (nick_) ->
@@ -103,11 +93,11 @@ Meteor.startup ->
   Meteor.subscribe("misc")
 
   $input = $('#input')
-  $('#submit').click insert_message
+  $('#submit').click process_input
 
   $input.keydown (event) ->
     if event.which is 13
-      insert_message()
+      process_input()
       event.stopPropagation()
 
   Meteor.call('keepalive', Session.get('user_id'), nick)
